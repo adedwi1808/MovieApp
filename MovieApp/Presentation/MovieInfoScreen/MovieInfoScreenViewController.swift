@@ -12,6 +12,7 @@ import RxCocoa
 enum MovieInfoScreenSection: Int, CaseIterable {
     case youtubePlayer = 0
     case movieDetail = 1
+    case reviews = 2
 }
 
 class MovieInfoScreenViewController: UITableViewController {
@@ -55,6 +56,14 @@ class MovieInfoScreenViewController: UITableViewController {
                 tableView.reloadSections(IndexSet(integer: MovieInfoScreenSection.youtubePlayer.rawValue), with: .automatic)
             })
             .disposed(by: disposeBag)
+        
+        viewModel.reviews
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] detail in
+                guard let self else { return }
+                tableView.reloadSections(IndexSet(integer: MovieInfoScreenSection.reviews.rawValue), with: .automatic)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func updateNavigationBar() {
@@ -68,7 +77,12 @@ extension MovieInfoScreenViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        switch(section) {
+        case MovieInfoScreenSection.reviews.rawValue:
+            return viewModel.reviews.value.count
+        default:
+            return 1
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -82,8 +96,26 @@ extension MovieInfoScreenViewController {
             let cell = MovieDetailTableViewCell()
             cell.configure(with: detail)
             return cell
+        case MovieInfoScreenSection.reviews.rawValue:
+            if indexPath.row == self.viewModel.reviews.value.count - 1,
+               viewModel.isAbleToLoadMore {
+                self.viewModel.fetchReviewsNextPage()
+            }
+            let cell = ReviewTableViewCell()
+            let data = viewModel.reviews.value[indexPath.row]
+            cell.configure(with: data)
+            return cell
         default:
             return UITableViewCell()
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case MovieInfoScreenSection.reviews.rawValue:
+            return "Reviews"
+        default:
+            return nil
         }
     }
 }
