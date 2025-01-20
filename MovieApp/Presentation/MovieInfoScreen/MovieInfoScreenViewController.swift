@@ -103,6 +103,7 @@ extension MovieInfoScreenViewController {
             }
             let cell = ReviewTableViewCell()
             let data = viewModel.reviews.value[indexPath.row]
+            cell.selectionStyle = .none
             cell.configure(with: data)
             return cell
         default:
