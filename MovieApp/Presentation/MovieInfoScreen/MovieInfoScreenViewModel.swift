@@ -14,6 +14,10 @@ class MovieInfoScreenViewModel {
     
     let detail = BehaviorRelay<MovieDetail?>(value: nil)
     let trailer = BehaviorRelay<MovieVideos?>(value: nil)
+    let reviews = BehaviorRelay<[Review]>(value: [])
+    private var reviewPage: Int = 1
+    private var maxPage: Int = 1
+    var isAbleToLoadMore: Bool = true
     
     init(id: Int, services: MovieInfoScreenServicesProtocol) {
         self.id = id
@@ -24,6 +28,7 @@ class MovieInfoScreenViewModel {
         Task {
             try await getMovieDetail()
             try await getMovieVideos()
+            try await getMovieReviews()
         }
     }
     
@@ -54,5 +59,36 @@ class MovieInfoScreenViewModel {
     private func mapMovieVideosResponse(_ response: MovieVideosResponseModel) {
         guard let firstTrailer = response.results?.first(where: { $0.type == "Trailer" }) else { return }
         trailer.accept(firstTrailer.mapToMovieVideos())
+    }
+    
+    @MainActor
+    func getMovieReviews() async throws {
+        do {
+            let response = try await services.getMovieReviews(endPoint: .movieReviews(id: id, page: reviewPage))
+            mapMovieReviewsResponse(response)
+        } catch let err as NetworkError {
+            print(err.localizedDescription)
+        }
+    }
+    
+    private func mapMovieReviewsResponse(_ response: MovieReviewsResponseModel) {
+        guard let newReviews = response.results?.compactMap({$0.mapToMovieReview()}) else { return }
+        reviews.accept(reviews.value + newReviews)
+        
+        maxPage = response.totalPages ?? 1
+        isAbleToLoadMore = reviewPage <= maxPage
+    }
+    
+    func fetchReviewsNextPage() {
+        if isAbleToLoadMore {
+            reviewPage += 1
+            fetchReviews()
+        }
+    }
+    
+    private func fetchReviews() {
+        Task {
+            try await getMovieReviews()
+        }
     }
 }

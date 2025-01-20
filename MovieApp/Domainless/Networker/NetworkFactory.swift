@@ -11,6 +11,7 @@ enum NetworkFactory {
     case popularMovies(page: Int)
     case movieDetail(id: Int)
     case movieVideos(id: Int)
+    case movieReviews(id: Int, page: Int)
 }
 
 extension NetworkFactory {
@@ -21,6 +22,7 @@ extension NetworkFactory {
         case .popularMovies: "/3/movie/popular"
         case .movieDetail(let id): "/3/movie/\(id)"
         case .movieVideos(let id): "/3/movie/\(id)/videos"
+        case .movieReviews(let id, let page): "/3/movie/\(id)/reviews"
         }
     }
     
@@ -28,6 +30,8 @@ extension NetworkFactory {
     var queryItems: [URLQueryItem] {
         switch self {
         case .popularMovies(let page):
+            return [URLQueryItem(name: "page", value: "\(page)")]
+        case .movieReviews(_, let page):
             return [URLQueryItem(name: "page", value: "\(page)")]
         default:
             return []
@@ -66,7 +70,7 @@ extension NetworkFactory {
     // MARK: HTTP METHOD
     var method: RequestMethod {
         switch self {
-        case .popularMovies, .movieDetail, .movieVideos:
+        case .popularMovies, .movieDetail, .movieVideos, .movieReviews:
             return .get
         }
     }
@@ -98,7 +102,7 @@ extension NetworkFactory {
     // MARK: HEADER API
     var headers: [String: String]? {
         switch self {
-        case .popularMovies, .movieDetail, .movieVideos:
+        case .popularMovies, .movieDetail, .movieVideos, .movieReviews:
             return getHeaders(type: .authorized)
         }
     }
