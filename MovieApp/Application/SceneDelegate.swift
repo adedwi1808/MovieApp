@@ -18,7 +18,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let services: MainScreenServicesProtocol = MainScreenServices()
         let viewModel = MainScreenViewModel(services: services)
         let viewController = MainScreenViewController(viewModel: viewModel)
-        window?.rootViewController = viewController
+        let navigationController = UINavigationController(rootViewController: viewController)
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
 
