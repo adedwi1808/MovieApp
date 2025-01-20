@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		ADB617562D3E83390004A5AE /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = ADB617552D3E83390004A5AE /* RxBlocking */; };
+		ADB617582D3E83390004A5AE /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = ADB617572D3E83390004A5AE /* RxCocoa */; };
+		ADB6175A2D3E83390004A5AE /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ADB617592D3E83390004A5AE /* RxSwift */; };
+		ADB6175C2D3E83390004A5AE /* RxTest in Frameworks */ = {isa = PBXBuildFile; productRef = ADB6175B2D3E83390004A5AE /* RxTest */; };
+		ADB6175F2D3E842E0004A5AE /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = ADB6175E2D3E842E0004A5AE /* Kingfisher */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		ADB617302D3E7CAE0004A5AE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +73,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADB6175F2D3E842E0004A5AE /* Kingfisher in Frameworks */,
+				ADB6175A2D3E83390004A5AE /* RxSwift in Frameworks */,
+				ADB617582D3E83390004A5AE /* RxCocoa in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +83,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADB6175C2D3E83390004A5AE /* RxTest in Frameworks */,
+				ADB617562D3E83390004A5AE /* RxBlocking in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +138,9 @@
 			);
 			name = MovieApp;
 			packageProductDependencies = (
+				ADB617572D3E83390004A5AE /* RxCocoa */,
+				ADB617592D3E83390004A5AE /* RxSwift */,
+				ADB6175E2D3E842E0004A5AE /* Kingfisher */,
 			);
 			productName = MovieApp;
 			productReference = ADB617192D3E7CAC0004A5AE /* MovieApp.app */;
@@ -148,6 +164,8 @@
 			);
 			name = MovieAppTests;
 			packageProductDependencies = (
+				ADB617552D3E83390004A5AE /* RxBlocking */,
+				ADB6175B2D3E83390004A5AE /* RxTest */,
 			);
 			productName = MovieAppTests;
 			productReference = ADB6172F2D3E7CAE0004A5AE /* MovieAppTests.xctest */;
@@ -208,6 +226,10 @@
 			);
 			mainGroup = ADB617102D3E7CAC0004A5AE;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				ADB617542D3E83390004A5AE /* XCRemoteSwiftPackageReference "RxSwift" */,
+				ADB6175D2D3E842E0004A5AE /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = ADB6171A2D3E7CAC0004A5AE /* Products */;
 			projectDirPath = "";
@@ -567,6 +589,53 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		ADB617542D3E83390004A5AE /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.8.0;
+			};
+		};
+		ADB6175D2D3E842E0004A5AE /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.1.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		ADB617552D3E83390004A5AE /* RxBlocking */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ADB617542D3E83390004A5AE /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxBlocking;
+		};
+		ADB617572D3E83390004A5AE /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ADB617542D3E83390004A5AE /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		ADB617592D3E83390004A5AE /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ADB617542D3E83390004A5AE /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		ADB6175B2D3E83390004A5AE /* RxTest */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ADB617542D3E83390004A5AE /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxTest;
+		};
+		ADB6175E2D3E842E0004A5AE /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ADB6175D2D3E842E0004A5AE /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = ADB617112D3E7CAC0004A5AE /* Project object */;
 }
