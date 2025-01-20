@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 enum MovieInfoScreenSection: Int, CaseIterable {
     case youtubePlayer = 0
@@ -15,6 +17,7 @@ enum MovieInfoScreenSection: Int, CaseIterable {
 class MovieInfoScreenViewController: UITableViewController {
     
     let viewModel: MovieInfoScreenViewModel!
+    private let disposeBag = DisposeBag()
     
     init(viewModel: MovieInfoScreenViewModel) {
         self.viewModel = viewModel
@@ -28,9 +31,27 @@ class MovieInfoScreenViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        tableView.register(YoutubePlayerTableViewCell.self, forCellReuseIdentifier: YoutubePlayerTableViewCell.identifier)
+        tableView.register(MovieDetailTableViewCell.self, forCellReuseIdentifier: MovieDetailTableViewCell.identifier)
+        
         viewModel.fetchMovies()
+        bindViewModel()
     }
     
+    private func bindViewModel() {
+        viewModel.detail
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] detail in
+                guard let self else { return }
+                tableView.reloadData()
+                updateNavigationBar()
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func updateNavigationBar() {
+        navigationItem.title = viewModel.detail.value?.title ?? ""
+    }
 }
 
 extension MovieInfoScreenViewController {
@@ -46,6 +67,11 @@ extension MovieInfoScreenViewController {
         switch(indexPath.section) {
         case MovieInfoScreenSection.youtubePlayer.rawValue:
             let cell = YoutubePlayerTableViewCell()
+            return cell
+        case MovieInfoScreenSection.movieDetail.rawValue:
+            guard let detail = viewModel.detail.value else { return UITableViewCell() }
+            let cell = MovieDetailTableViewCell()
+            cell.configure(with: detail)
             return cell
         default:
             return UITableViewCell()

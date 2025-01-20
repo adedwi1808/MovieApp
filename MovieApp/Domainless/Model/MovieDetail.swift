@@ -11,5 +11,5 @@ struct MovieDetail: Codable {
     let genre: String
     let durations: String
     let posterPath: String
-    let description: String
+    let voteAverage: String
 }

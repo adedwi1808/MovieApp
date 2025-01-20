@@ -49,3 +49,19 @@ struct GenreResponseModel: Codable {
     let id: Int?
     let name: String?
 }
+
+extension MoviesDetailResponseModel {
+    func mapToMovieDetail() -> MovieDetail {
+        let genres = genres?.compactMap{$0.name ?? ""}.joined(separator: " · ") ?? ""
+        let yearOfRelease = String(releaseDate?.prefix(4) ?? "-")
+        let voteAverage = String(format: "%.2f", voteAverage ?? 0.0)
+        return MovieDetail(
+            title: title ?? "",
+            yearOfRelease: yearOfRelease,
+            genre: genres,
+            durations: runtime?.formatRuntime() ?? "-",
+            posterPath: posterPath ?? "",
+            voteAverage: "\(voteAverage)/10"
+        )
+    }
+}

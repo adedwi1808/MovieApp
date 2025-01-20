@@ -29,9 +29,13 @@ class MovieInfoScreenViewModel {
     func getMovieDetail() async throws {
         do {
             let response = try await services.getMovieDetail(endPoint: .movieDetail(id: id))
-            
+            mapMovieDetailResponse(response)
         } catch let err as NetworkError {
             print(err.localizedDescription)
         }
+    }
+    
+    private func mapMovieDetailResponse(_ response: MoviesDetailResponseModel) {
+        detail.accept(response.mapToMovieDetail())
     }
 }

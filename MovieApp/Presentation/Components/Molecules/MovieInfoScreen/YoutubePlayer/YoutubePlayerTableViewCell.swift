@@ -9,6 +9,7 @@ import UIKit
 import YouTubeiOSPlayerHelper
 
 class YoutubePlayerTableViewCell: UITableViewCell {
+    static let identifier = "YoutubePlayerTableViewCell"
     private let youtubePlayer = YTPlayerView()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
