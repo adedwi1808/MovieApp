@@ -8,7 +8,35 @@
 import RxSwift
 import RxCocoa
 
-class MovieViewModel {
-    let movies = BehaviorRelay<[Movie]>(value: [Movie(id: 912649, posterPath: "/aosm8NMQ3UyoBVpSxyimorCQykC.jpg"),Movie(id: 539972, posterPath: "/i47IUSsN126K11JUzqQIOi1Mg1M.jpg"), Movie(id: 939243, posterPath: "/d8Ryb8AunYAuycVKDp5HpdWPKgC.jpg")])
+class MainScreenViewModel {
+    let movies = BehaviorRelay<[Movie]>(value: [])
+    var page: Int = 1
     
+    private let services: MainScreenServicesProtocol
+    
+    init(services: MainScreenServicesProtocol) {
+        self.services = services
+    }
+    
+    func fetchMovies() {
+        Task {
+            try await getPopularMovies()
+        }
+    }
+    
+    @MainActor
+    func getPopularMovies() async throws{
+        do {
+            let response = try await services.getPopularMovies(endPoint: .popularMovies(page: page))
+            mapResponse(response: response)
+        } catch let err as NetworkError {
+            print(err.localizedDescription)
+        }
+    }
+    
+    private func mapResponse(response moviesResponse: MoviesResponseModel) {
+        guard let results = moviesResponse.results else { return }
+        let newMovies = results.map { $0.mapToMovie() }
+        movies.accept(movies.value + newMovies)
+    }
 }
