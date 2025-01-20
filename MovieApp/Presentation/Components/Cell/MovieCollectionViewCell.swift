@@ -44,6 +44,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(data movie: Movie) {
+        posterView.startShimmering()
         guard let path = movie.posterPath,
               let url = URL(string: "https://image.tmdb.org/t/p/w500\(path)") else {
             return
@@ -53,7 +54,10 @@ class MovieCollectionViewCell: UICollectionViewCell {
             .cacheOriginalImage
         ]
         
-        posterView.kf.setImage(with: url, options: options)
+        posterView.kf.setImage(with: url, options: options, completionHandler: { [weak self] result in
+            guard let self else { return }
+            posterView.stopShimmering()
+        })
     }
     
 }
