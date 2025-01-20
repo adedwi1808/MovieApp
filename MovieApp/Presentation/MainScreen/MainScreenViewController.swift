@@ -64,5 +64,15 @@ class MainScreenViewController: UIViewController {
                 }
             })
             .disposed(by: disposeBag)
+        
+        collectionView.rx.modelSelected(Movie.self)
+            .subscribe(onNext: { [weak self] movie in
+                self?.handleMovieSelection(movie)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func handleMovieSelection(_ movie: Movie) {
+        print("Movie selected: \(movie.id)")
     }
 }
