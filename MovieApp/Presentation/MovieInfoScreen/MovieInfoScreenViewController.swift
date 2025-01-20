@@ -47,6 +47,14 @@ class MovieInfoScreenViewController: UITableViewController {
                 updateNavigationBar()
             })
             .disposed(by: disposeBag)
+        
+        viewModel.trailer
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] detail in
+                guard let self else { return }
+                tableView.reloadSections(IndexSet(integer: MovieInfoScreenSection.youtubePlayer.rawValue), with: .automatic)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func updateNavigationBar() {
@@ -67,6 +75,7 @@ extension MovieInfoScreenViewController {
         switch(indexPath.section) {
         case MovieInfoScreenSection.youtubePlayer.rawValue:
             let cell = YoutubePlayerTableViewCell()
+            cell.configure(data: viewModel.trailer.value)
             return cell
         case MovieInfoScreenSection.movieDetail.rawValue:
             guard let detail = viewModel.detail.value else { return UITableViewCell() }

@@ -13,6 +13,7 @@ class MovieInfoScreenViewModel {
     private let services: MovieInfoScreenServicesProtocol
     
     let detail = BehaviorRelay<MovieDetail?>(value: nil)
+    let trailer = BehaviorRelay<MovieVideos?>(value: nil)
     
     init(id: Int, services: MovieInfoScreenServicesProtocol) {
         self.id = id
@@ -22,6 +23,7 @@ class MovieInfoScreenViewModel {
     func fetchMovies() {
         Task {
             try await getMovieDetail()
+            try await getMovieVideos()
         }
     }
     
@@ -37,5 +39,20 @@ class MovieInfoScreenViewModel {
     
     private func mapMovieDetailResponse(_ response: MoviesDetailResponseModel) {
         detail.accept(response.mapToMovieDetail())
+    }
+    
+    @MainActor
+    func getMovieVideos() async throws {
+        do {
+            let response = try await services.getMovieVideos(endPoint: .movieVideos(id: id))
+            mapMovieVideosResponse(response)
+        } catch let err as NetworkError {
+            print(err.localizedDescription)
+        }
+    }
+    
+    private func mapMovieVideosResponse(_ response: MovieVideosResponseModel) {
+        guard let firstTrailer = response.results?.first(where: { $0.type == "Trailer" }) else { return }
+        trailer.accept(firstTrailer.mapToMovieVideos())
     }
 }

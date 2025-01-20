@@ -32,7 +32,10 @@ class YoutubePlayerTableViewCell: UITableViewCell {
             youtubePlayer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             youtubePlayer.heightAnchor.constraint(equalToConstant: 300)
         ])
-
-        youtubePlayer.load(withVideoId: "hCblq9qv3NM")
+    }
+    
+    func configure(data: MovieVideos?) {
+        guard let key = data?.key else { return }
+        youtubePlayer.load(withVideoId: key)
     }
 }
