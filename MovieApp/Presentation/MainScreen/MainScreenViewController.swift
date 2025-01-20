@@ -73,7 +73,9 @@ class MainScreenViewController: UIViewController {
     }
     
     private func handleMovieSelection(_ movie: Movie) {
-        let vc = MovieInfoScreenViewController(id: movie.id)
+        let services = MovieInfoScreenServices()
+        let viewModel = MovieInfoScreenViewModel(id: movie.id, services: services)
+        let vc = MovieInfoScreenViewController(viewModel: viewModel)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -14,10 +14,10 @@ enum MovieInfoScreenSection: Int, CaseIterable {
 
 class MovieInfoScreenViewController: UITableViewController {
     
-    let id: Int
+    let viewModel: MovieInfoScreenViewModel!
     
-    init(id: Int) {
-        self.id = id
+    init(viewModel: MovieInfoScreenViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -28,6 +28,7 @@ class MovieInfoScreenViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        viewModel.fetchMovies()
     }
     
 }
