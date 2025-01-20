@@ -1,0 +1,12 @@
+//
+//  AppConfig.xcconfig
+//  MovieApp
+//
+//  Created by Ade Dwi Prayitno on 20/01/25.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+TMBD_BASE_URL = api.themoviedb.org
+TMBD_ACCESS_TOKEN ={ISI_TOKEN}
