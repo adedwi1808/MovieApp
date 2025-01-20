@@ -11,6 +11,8 @@ import RxCocoa
 class MainScreenViewModel {
     let movies = BehaviorRelay<[Movie]>(value: [])
     var page: Int = 1
+    var maxPage: Int = 1
+    var isAbleToLoadMore: Bool = true
     
     private let services: MainScreenServicesProtocol
     
@@ -34,9 +36,19 @@ class MainScreenViewModel {
         }
     }
     
+    func fetchMoviesNextPage() {
+        if isAbleToLoadMore {
+            page += 1
+            fetchMovies()
+        }
+    }
+    
     private func mapResponse(response moviesResponse: MoviesResponseModel) {
         guard let results = moviesResponse.results else { return }
         let newMovies = results.map { $0.mapToMovie() }
         movies.accept(movies.value + newMovies)
+        
+        maxPage = moviesResponse.totalPages ?? 1
+        isAbleToLoadMore = page <= maxPage
     }
 }

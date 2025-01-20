@@ -54,5 +54,15 @@ class MainScreenViewController: UIViewController {
                 cell.configure(data: data)
             }
             .disposed(by: disposeBag)
+        
+        collectionView.rx.willDisplayCell
+            .subscribe(onNext: { [weak self] _, indexPath in
+                guard let self = self else { return }
+                if indexPath.row == self.viewModel.movies.value.count - 1,
+                   viewModel.isAbleToLoadMore {
+                    self.viewModel.fetchMoviesNextPage()
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }
