@@ -10,6 +10,7 @@ import Foundation
 enum NetworkFactory {
     case popularMovies(page: Int)
     case movieDetail(id: Int)
+    case movieVideos(id: Int)
 }
 
 extension NetworkFactory {
@@ -19,6 +20,7 @@ extension NetworkFactory {
         switch self {
         case .popularMovies: "/3/movie/popular"
         case .movieDetail(let id): "/3/movie/\(id)"
+        case .movieVideos(let id): "/3/movie/\(id)/videos"
         }
     }
     
@@ -64,7 +66,7 @@ extension NetworkFactory {
     // MARK: HTTP METHOD
     var method: RequestMethod {
         switch self {
-        case .popularMovies, .movieDetail:
+        case .popularMovies, .movieDetail, .movieVideos:
             return .get
         }
     }
@@ -96,7 +98,7 @@ extension NetworkFactory {
     // MARK: HEADER API
     var headers: [String: String]? {
         switch self {
-        case .popularMovies, .movieDetail:
+        case .popularMovies, .movieDetail, .movieVideos:
             return getHeaders(type: .authorized)
         }
     }

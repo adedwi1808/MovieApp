@@ -11,6 +11,7 @@ protocol MovieInfoScreenServicesProtocol: AnyObject {
     var networker: NetworkerProtocol { get }
     
     func getMovieDetail(endPoint: NetworkFactory) async throws -> MoviesDetailResponseModel
+    func getMovieVideos(endPoint: NetworkFactory) async throws -> MovieVideosResponseModel
 }
 
 final class MovieInfoScreenServices: MovieInfoScreenServicesProtocol {
@@ -22,5 +23,9 @@ final class MovieInfoScreenServices: MovieInfoScreenServicesProtocol {
     
     func getMovieDetail(endPoint: NetworkFactory) async throws -> MoviesDetailResponseModel {
         try await networker.taskAsync(type: MoviesDetailResponseModel.self, endPoint: endPoint, isMultipart: false)
+    }
+    
+    func getMovieVideos(endPoint: NetworkFactory) async throws -> MovieVideosResponseModel {
+        try await networker.taskAsync(type: MovieVideosResponseModel.self, endPoint: endPoint, isMultipart: false)
     }
 }
