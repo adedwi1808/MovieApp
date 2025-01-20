@@ -73,6 +73,7 @@ class MainScreenViewController: UIViewController {
     }
     
     private func handleMovieSelection(_ movie: Movie) {
-        print("Movie selected: \(movie.id)")
+        let vc = MovieInfoScreenViewController(id: movie.id)
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
