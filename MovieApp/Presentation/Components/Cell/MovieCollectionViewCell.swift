@@ -25,6 +25,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(posterView)
+        clipsToBounds = true
     }
     
     required init?(coder: NSCoder) {
@@ -37,12 +38,22 @@ class MovieCollectionViewCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
+        super.prepareForReuse()
         posterView.image = nil
+        posterView.kf.cancelDownloadTask()
     }
     
     func configure(data movie: Movie) {
-        guard let path =  movie.posterPath,let url = URL(string: "https://image.tmdb.org/t/p/w500\(path)") else { return }
-        posterView.kf.setImage(with: url)
+        guard let path = movie.posterPath,
+              let url = URL(string: "https://image.tmdb.org/t/p/w500\(path)") else {
+            return
+        }
+        let options: KingfisherOptionsInfo = [
+            .transition(.fade(0.2)),
+            .cacheOriginalImage
+        ]
+        
+        posterView.kf.setImage(with: url, options: options)
     }
     
 }
