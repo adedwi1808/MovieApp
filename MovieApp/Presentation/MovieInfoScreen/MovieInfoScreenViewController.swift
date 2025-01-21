@@ -92,9 +92,10 @@ extension MovieInfoScreenViewController {
             cell.configure(data: viewModel.trailer.value)
             return cell
         case MovieInfoScreenSection.movieDetail.rawValue:
-            guard let detail = viewModel.detail.value else { return UITableViewCell() }
             let cell = MovieDetailTableViewCell()
-            cell.configure(with: detail)
+            if let detail = viewModel.detail.value {
+                cell.configure(with: detail)
+            }
             return cell
         case MovieInfoScreenSection.reviews.rawValue:
             if indexPath.row == self.viewModel.reviews.value.count - 1,
