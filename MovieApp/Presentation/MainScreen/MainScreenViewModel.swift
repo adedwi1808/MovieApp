@@ -11,6 +11,7 @@ import RxCocoa
 class MainScreenViewModel {
     let errorMessage = PublishSubject<String>()
     let movies = BehaviorRelay<[Movie]>(value: [])
+    let isLoading = BehaviorRelay<Bool>(value: false)
     var page: Int = 1
     var maxPage: Int = 1
     var isAbleToLoadMore: Bool = true
@@ -29,10 +30,13 @@ class MainScreenViewModel {
     
     @MainActor
     func getPopularMovies() async throws{
+        isLoading.accept(true)
         do {
             let response = try await services.getPopularMovies(endPoint: .popularMovies(page: page))
             mapResponse(response: response)
+            isLoading.accept(false)
         } catch let err as NetworkError {
+            isLoading.accept(false)
             errorMessage.onNext(err.localizedDescription)
         }
     }

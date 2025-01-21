@@ -22,6 +22,14 @@ class MainScreenViewController: UIViewController {
         return collectionView
     }()
     
+    private let loadingView: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    
     private let disposeBag = DisposeBag()
     private let viewModel: MainScreenViewModel!
     
@@ -38,6 +46,7 @@ class MainScreenViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupCollectionView()
+        setupLoadingView()
         bindViewModel()
         viewModel.fetchMovies()
     }
@@ -46,6 +55,15 @@ class MainScreenViewController: UIViewController {
         collectionView.backgroundColor = .white
         view.addSubview(collectionView)
         collectionView.frame = view.bounds
+    }
+    
+    private func setupLoadingView() {
+        view.addSubview(loadingView)
+        
+        NSLayoutConstraint.activate([
+            loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
     
     private func showErrorMessage(_ errorMessage: String) {
@@ -66,6 +84,18 @@ class MainScreenViewController: UIViewController {
                 guard let self = self else { return }
                 showErrorMessage(errorMessage)
             }
+            .disposed(by: disposeBag)
+        
+        viewModel.isLoading
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isLoading in
+                guard let self else { return }
+                if isLoading {
+                    loadingView.startAnimating()
+                } else {
+                    loadingView.stopAnimating()
+                }
+            })
             .disposed(by: disposeBag)
         
         collectionView.rx.willDisplayCell
