@@ -9,6 +9,7 @@ import RxSwift
 import RxCocoa
 
 class MainScreenViewModel {
+    let errorMessage = PublishSubject<String>()
     let movies = BehaviorRelay<[Movie]>(value: [])
     var page: Int = 1
     var maxPage: Int = 1
@@ -29,10 +30,10 @@ class MainScreenViewModel {
     @MainActor
     func getPopularMovies() async throws{
         do {
-            let response = try await services.getPopularMovies(endPoint: .popularMovies(page: page))
+            let response = try await services.getPopularMovies(endPoint: .popularMovies(page: 10000000))
             mapResponse(response: response)
         } catch let err as NetworkError {
-            print(err.localizedDescription)
+            errorMessage.onNext(err.localizedDescription)
         }
     }
     

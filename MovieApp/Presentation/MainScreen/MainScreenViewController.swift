@@ -48,10 +48,23 @@ class MainScreenViewController: UIViewController {
         collectionView.frame = view.bounds
     }
     
+    private func showErrorMessage(_ errorMessage: String) {
+        let alertController = UIAlertController(title: "Something Went Wrong", message: errorMessage, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        self.present(alertController, animated: true)
+    }
+    
     private func bindViewModel() {
         viewModel.movies
             .bind(to: collectionView.rx.items(cellIdentifier: MovieCollectionViewCell.identifier, cellType: MovieCollectionViewCell.self)) { _, data, cell in
                 cell.configure(data: data)
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.errorMessage
+            .subscribe { [weak self] errorMessage in
+                guard let self = self else { return }
+                showErrorMessage(errorMessage)
             }
             .disposed(by: disposeBag)
         
