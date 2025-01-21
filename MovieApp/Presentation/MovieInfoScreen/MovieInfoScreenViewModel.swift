@@ -12,6 +12,7 @@ class MovieInfoScreenViewModel {
     private let id: Int
     private let services: MovieInfoScreenServicesProtocol
     let errorMessage = PublishSubject<String>()
+    let isLoading = BehaviorRelay<Bool>(value: false)
     
     let detail = BehaviorRelay<MovieDetail?>(value: nil)
     let trailer = BehaviorRelay<MovieVideos?>(value: nil)
@@ -35,10 +36,13 @@ class MovieInfoScreenViewModel {
     
     @MainActor
     func getMovieDetail() async throws {
+        isLoading.accept(true)
         do {
             let response = try await services.getMovieDetail(endPoint: .movieDetail(id: id))
             mapMovieDetailResponse(response)
+            isLoading.accept(false)
         } catch let err as NetworkError {
+            isLoading.accept(false)
             errorMessage.onNext(err.localizedDescription)
         }
     }
@@ -49,10 +53,13 @@ class MovieInfoScreenViewModel {
     
     @MainActor
     func getMovieVideos() async throws {
+        isLoading.accept(true)
         do {
             let response = try await services.getMovieVideos(endPoint: .movieVideos(id: id))
             mapMovieVideosResponse(response)
+            isLoading.accept(false)
         } catch let err as NetworkError {
+            isLoading.accept(false)
             errorMessage.onNext(err.localizedDescription)
         }
     }

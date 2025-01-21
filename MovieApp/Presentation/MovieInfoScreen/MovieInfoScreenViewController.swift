@@ -17,6 +17,13 @@ enum MovieInfoScreenSection: Int, CaseIterable {
 
 class MovieInfoScreenViewController: UITableViewController {
     
+    private let loadingView: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
     let viewModel: MovieInfoScreenViewModel!
     private let disposeBag = DisposeBag()
     
@@ -34,7 +41,7 @@ class MovieInfoScreenViewController: UITableViewController {
         view.backgroundColor = .white
         tableView.register(YoutubePlayerTableViewCell.self, forCellReuseIdentifier: YoutubePlayerTableViewCell.identifier)
         tableView.register(MovieDetailTableViewCell.self, forCellReuseIdentifier: MovieDetailTableViewCell.identifier)
-        
+        setupLoadingView()
         viewModel.fetchMovies()
         bindViewModel()
     }
@@ -71,6 +78,18 @@ class MovieInfoScreenViewController: UITableViewController {
                 showErrorMessage(errorMessage)
             }
             .disposed(by: disposeBag)
+        
+        viewModel.isLoading
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isLoading in
+                guard let self else { return }
+                if isLoading {
+                    loadingView.startAnimating()
+                } else {
+                    loadingView.stopAnimating()
+                }
+            })
+            .disposed(by: disposeBag)
     }
     
     private func updateNavigationBar() {
@@ -81,6 +100,15 @@ class MovieInfoScreenViewController: UITableViewController {
         let alertController = UIAlertController(title: "Something Went Wrong", message: errorMessage, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default))
         self.present(alertController, animated: true)
+    }
+    
+    private func setupLoadingView() {
+        view.addSubview(loadingView)
+        
+        NSLayoutConstraint.activate([
+            loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
 }
 
