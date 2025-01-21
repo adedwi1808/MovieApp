@@ -11,6 +11,7 @@ import RxCocoa
 class MovieInfoScreenViewModel {
     private let id: Int
     private let services: MovieInfoScreenServicesProtocol
+    let errorMessage = PublishSubject<String>()
     
     let detail = BehaviorRelay<MovieDetail?>(value: nil)
     let trailer = BehaviorRelay<MovieVideos?>(value: nil)
@@ -38,7 +39,7 @@ class MovieInfoScreenViewModel {
             let response = try await services.getMovieDetail(endPoint: .movieDetail(id: id))
             mapMovieDetailResponse(response)
         } catch let err as NetworkError {
-            print(err.localizedDescription)
+            errorMessage.onNext(err.localizedDescription)
         }
     }
     
@@ -52,7 +53,7 @@ class MovieInfoScreenViewModel {
             let response = try await services.getMovieVideos(endPoint: .movieVideos(id: id))
             mapMovieVideosResponse(response)
         } catch let err as NetworkError {
-            print(err.localizedDescription)
+            errorMessage.onNext(err.localizedDescription)
         }
     }
     
@@ -67,7 +68,7 @@ class MovieInfoScreenViewModel {
             let response = try await services.getMovieReviews(endPoint: .movieReviews(id: id, page: reviewPage))
             mapMovieReviewsResponse(response)
         } catch let err as NetworkError {
-            print(err.localizedDescription)
+            errorMessage.onNext(err.localizedDescription)
         }
     }
     

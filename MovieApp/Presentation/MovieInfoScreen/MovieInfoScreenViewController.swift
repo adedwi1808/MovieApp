@@ -64,10 +64,23 @@ class MovieInfoScreenViewController: UITableViewController {
                 tableView.reloadSections(IndexSet(integer: MovieInfoScreenSection.reviews.rawValue), with: .automatic)
             })
             .disposed(by: disposeBag)
+        
+        viewModel.errorMessage
+            .subscribe { [weak self] errorMessage in
+                guard let self = self else { return }
+                showErrorMessage(errorMessage)
+            }
+            .disposed(by: disposeBag)
     }
     
     private func updateNavigationBar() {
         navigationItem.title = viewModel.detail.value?.title ?? ""
+    }
+    
+    private func showErrorMessage(_ errorMessage: String) {
+        let alertController = UIAlertController(title: "Something Went Wrong", message: errorMessage, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        self.present(alertController, animated: true)
     }
 }
 
