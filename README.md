@@ -31,7 +31,7 @@ https://developer.themoviedb.org/reference/intro/getting-started
 #### Get Movie Detail
 
 ```http
-  GET https://api.themoviedb.org)/3/movie/{id}
+  GET https://api.themoviedb.org)/3/movie/{movie_id}
 ```
 
 | Parameter | Data Type| Type | Description                       |
@@ -42,23 +42,23 @@ https://developer.themoviedb.org/reference/intro/getting-started
 #### Get Movie Videos (For Trailer)
 
 ```http
-  GET https://api.themoviedb.org)/3/movie/{id}/videos
+  GET https://api.themoviedb.org)/3/movie/{movie_id}/videos
 ```
 
 | Parameter | Data Type| Type | Description                       |
 | :-------- | :------- | :------| :-----------------------------------|
-| `id`      | `string` | 'Path Params' | **Required**. it's the movie identifier|
+| `movie_id`      | `string` | 'Path Params' | **Required**. it's the movie identifier|
 
 
 #### Get Movie Reviews
 
 ```http
-  GET https://api.themoviedb.org)/3/movie/{id}/reviews
+  GET https://api.themoviedb.org)/3/movie/{movie_id}/reviews
 ```
 
 | Parameter | Data Type| Type | Description                       |
 | :-------- | :------- | :------| :-----------------------------------|
-| `id`      | `string` | 'Path Params' | **Required**. it's the movie identifier|
+| `movie_id`      | `string` | 'Path Params' | **Required**. it's the movie identifier|
 | `page`      | `string` | 'Query Params' | **Required**.|
 
 
