@@ -36,9 +36,14 @@ final class Networker: NetworkerProtocol {
 #endif
         
         guard 200..<300 ~= httpResponse.statusCode else {
+            let res  = try? JSONDecoder().decode(NetworkErrorResponseModel.self, from: data)
             switch httpResponse.statusCode {
+            case 400:
+                throw NetworkError.badRequest(message: res?.statusMessage ?? "")
+            case 401:
+                throw NetworkError.unAuthorized
             default:
-                throw NetworkError.middlewareError(code: httpResponse.statusCode, message: "Something Went Wrong")
+                throw NetworkError.middlewareError(code: httpResponse.statusCode, message: res?.statusMessage ?? "Something Went Wrong")
             }
         }
         
