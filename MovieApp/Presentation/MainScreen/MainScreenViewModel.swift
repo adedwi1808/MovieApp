@@ -30,7 +30,7 @@ class MainScreenViewModel {
     @MainActor
     func getPopularMovies() async throws{
         do {
-            let response = try await services.getPopularMovies(endPoint: .popularMovies(page: 10000000))
+            let response = try await services.getPopularMovies(endPoint: .popularMovies(page: page))
             mapResponse(response: response)
         } catch let err as NetworkError {
             errorMessage.onNext(err.localizedDescription)
