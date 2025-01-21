@@ -36,7 +36,7 @@ https://developer.themoviedb.org/reference/intro/getting-started
 
 | Parameter | Data Type| Type | Description                       |
 | :-------- | :------- | :------| :-----------------------------------|
-| `id`      | `string` | 'Path Params' | **Required**. it's the movie identifier|
+| `movie_id`      | `string` | 'Path Params' | **Required**. it's the movie identifier|
 
 
 #### Get Movie Videos (For Trailer)
